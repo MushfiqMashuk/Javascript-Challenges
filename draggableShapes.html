@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Draggable</title>
+    <style>
+      .objects {
+        position: absolute;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: move;
+        font-size: 20px;
+      }
+
+      #object1 {
+        left: 50px;
+        width: 0;
+        height: 0;
+        border-left: 100px solid transparent;
+        border-right: 100px solid transparent;
+        border-bottom: 200px solid rgb(67, 94, 216);
+      }
+
+      #object1::after {
+        position: inherit;
+        top: 100px;
+        content: "Triangle";
+        color: white;
+      }
+
+      #object2 {
+        left: 250px;
+        height: 200px;
+        width: 200px;
+        border-radius: 50%;
+        background-color: #14e2b5;
+      }
+
+      #object3 {
+        height: 300px;
+        width: 300px;
+        left: 500px;
+        background-color: #864fb9d2;
+      }
+
+      #option {
+        position: absolute;
+        display: none;
+        width: 300px;
+        height: 80px;
+        background-color: rgb(108, 102, 114);
+        text-align: center;
+        padding: 10px 0px;
+        color: white;
+      }
+
+      button {
+        border-radius: 3px;
+        font-size: 15px;
+        cursor: pointer;
+        background-color: rgb(85, 197, 154);
+        border: none;
+        padding: 5px 10px;
+        margin-right: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Draggable Objects</h1>
+
+    <div id="object1" class="objects"></div>
+    <div id="object2" class="objects">Circle</div>
+    <div id="object3" class="objects">Square</div>
+
+    <div id="option">
+      <h3>Bring Object to:</h3>
+      <button id="front">Front</button>
+      <button id="back">Back</button>
+    </div>
+
+    <script>
+      let clickedObject;
+      const frontButtton = document.getElementById("front");
+      const backButtton = document.getElementById("back");
+
+      // Binding click event
+      frontButtton.addEventListener("click", (e) => option(e, clickedObject));
+      backButtton.addEventListener("click", (e) => option(e, clickedObject));
+
+      dragElement(document.getElementsByClassName("objects"));
+
+      function dragElement(elmnts) {
+        let pos1 = 0,
+          pos2 = 0,
+          pos3 = 0,
+          pos4 = 0;
+
+        for (const i in elmnts) {
+          elmnts[i].onmousedown = dragMouseDown;
+        }
+      }
+
+      function dragMouseDown(e) {
+        if (e.button === 2) {
+          clickedObject = e.target;
+          e.target.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+
+            handlingOption(e);
+          });
+        } else {
+          e = e || window.event;
+          e.preventDefault();
+          // get the mouse cursor position at startup:
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          document.onmouseup = closeDragElement;
+          // calling a function whenever the cursor moves:
+          document.onmousemove = elementDrag;
+        }
+      }
+
+      function handlingOption(e) {
+        const option = document.getElementById("option");
+        option.style.display = "block";
+        option.style.zIndex = 1000;
+        option.style.top = e.target.style.top;
+        option.style.left = e.target.style.left;
+      }
+
+      function closeDragElement() {
+        // stop moving when mouse button is released:
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+
+      function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // calculating the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // setting the element's new position:
+        e.target.style.top = e.target.offsetTop - pos2 + "px";
+        e.target.style.left = e.target.offsetLeft - pos1 + "px";
+      }
+
+      function option(e, object) {
+        if (e.target.id === "front") {
+          object.style.zIndex = 999;
+
+          zIndexControl(object);
+
+          e.target.parentElement.style.display = "none";
+        } else if (e.target.id === "back") {
+          zIndexControlForBack(object);
+
+          e.target.parentElement.style.display = "none";
+        }
+      }
+
+      function zIndexControl(object) {
+        if (object.id === "object1") {
+          const nextSibling = object.nextElementSibling;
+          const secondNextSibling = nextSibling.nextElementSibling;
+
+          nextSibling.style.zIndex === -888
+            ? (nextSibling.style.zIndex = -999)
+            : (nextSibling.style.zIndex = -888);
+          secondNextSibling.style.zIndex = -999;
+        } else if (object.id === "object2") {
+          const nextSibling = object.nextElementSibling;
+          const prevSibling = object.previousElementSibling;
+
+          nextSibling.style.zIndex = -999;
+          prevSibling.style.zIndex = -888;
+        }
+      }
+
+      function zIndexControlForBack(object) {
+        if (object.id === "object3") {
+          const prevSibling = object.previousElementSibling;
+          const firstSibling = prevSibling.previousElementSibling;
+
+          object.style.zIndex = -999;
+          prevSibling.style.zIndex = firstSibling.style.zIndex = -888;
+        } else if (object.id === "object2") {
+          const firstSibling = object.previousElementSibling;
+          const nextSibling = object.nextElementSibling;
+
+          object.style.zIndex = -999;
+          firstSibling.style.zIndex === -888
+            ? (firstSibling.style.zIndex = -999)
+            : (firstSibling.style.zIndex = -888);
+          nextSibling.style.zIndex = -999;
+        } else object.style.zIndex = -999;
+      }
+    </script>
+  </body>
+</html>

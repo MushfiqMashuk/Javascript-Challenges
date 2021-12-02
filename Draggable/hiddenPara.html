@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Partially Hidden Paragraph</title>
+
+    <style>
+      #container {
+        margin-left: 100px;
+        margin-top: 40px;
+        overflow: hidden;
+      }
+      #container div {
+        visibility: hidden;
+        z-index: 9999;
+        position: relative;
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <h2 id="header">
+        Hovering over this heading will make the Paragraph partially visible
+      </h2>
+      <div id="para">
+        Paragraph is partially hidden. Clicking on this will show you the rest.
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. At facilis
+        dolorem praesentium animi obcaecati pariatur ut soluta ipsa labore!
+        Autem cumque repellat delectus est nisi assumenda veritatis minus quis!
+        Ipsum voluptate maxime natus dolorem facere, nulla tempore dolor,
+        voluptatem, repudiandae nostrum recusandae totam hic inventore nam
+        aperiam! Fugit distinctio assumenda sed omnis reprehenderit voluptatibus
+        nulla consequuntur repudiandae molestiae maxime, delectus, temporibus id
+        dolores quidem autem placeat, cupiditate magni ea optio modi. Doloribus
+        quae ratione eligendi sed veniam quia, id eveniet! Neque, omnis quasi
+        deserunt voluptatem deleniti cumque reiciendis recusandae repudiandae
+        repellat reprehenderit animi accusantium rem impedit laborum nostrum,
+        alias doloribus. Lorem, ipsum dolor sit amet consectetur adipisicing
+        elit. Accusantium atque illum facere delectus debitis reprehenderit
+        doloremque sapiente repellat blanditiis ab, molestias, eos magnam, ipsum
+        rerum laudantium magni aperiam vitae! Quas soluta earum possimus culpa,
+        veniam inventore quibusdam pariatur? Sapiente ab, vitae perferendis
+        inventore enim provident accusantium ipsam nulla placeat! A!
+      </div>
+    </div>
+
+    <script>
+      const container = document.querySelector("#container");
+      const header = document.querySelector("#header");
+      const para = document.querySelector("#para");
+      const containerHeight = container.offsetHeight;
+
+      header.addEventListener("mouseover", () => {
+        para.style.visibility = "visible";
+        container.style.height = `${para.offsetHeight * 0.78}px`;
+      });
+
+      para.addEventListener("click", () => {
+        container.style.height = `${containerHeight}px`;
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color Picker</title>
+
+    <style>
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #object {
+        height: 200px;
+        width: 200px;
+        border-radius: 3px;
+        background-color: #6cd62f;
+        margin-left: 70px;
+        cursor: pointer;
+      }
+
+      input[type="button"] {
+        padding: 10px;
+        background-color: rgb(54, 108, 207);
+        border: none;
+        border-radius: 3px;
+        margin-left: 30px;
+        cursor: pointer;
+        color: white;
+        font-size: 17px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <input type="text" id="hex" />
+      <input type="color" id="color" />
+
+      <input type="button" value="Add a Solid Color" id="solid-button" />
+      <input type="button" value="Add on Hover Color" id="hover-button" />
+
+      <div id="object"></div>
+    </div>
+
+    <script>
+      const colorInput = document.querySelector("#color");
+      const hexInput = document.querySelector("#hex");
+      const solidButton = document.querySelector("#solid-button");
+      const hoverButton = document.querySelector("#hover-button");
+      const object = document.querySelector("#object");
+
+      let color;
+      let solidColor;
+      let onHoverColor;
+
+      function handleClick(e) {
+        if (e.target.id === "solid-button") {
+          if (color) {
+            solidColor = color;
+            object.style.backgroundColor = solidColor;
+          }
+        } else {
+          if (color) {
+            onHoverColor = color;
+            object.addEventListener(
+              "mouseover",
+              () => (object.style.backgroundColor = onHoverColor)
+            );
+
+            object.addEventListener(
+              "mouseout",
+              () => (object.style.backgroundColor = solidColor)
+            );
+          }
+        }
+      }
+
+      solidButton.addEventListener("click", handleClick);
+      hoverButton.addEventListener("click", handleClick);
+
+      colorInput.addEventListener("input", () => {
+        color = colorInput.value;
+        hexInput.value = color;
+      });
+    </script>
+  </body>
+</html>
